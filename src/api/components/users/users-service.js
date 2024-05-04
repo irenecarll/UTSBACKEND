@@ -13,6 +13,10 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  */
 
 async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrder = 'asc', searchField = '', searchKeyword = '') {
+  // mengembalikan semua data dengan memanggil fungsi getUsers dari users-repository jika pagesize dan pagenumber value nya kosong
+  if (!pageNumber || !pageSize){
+    return usersRepository.getUsers()
+  }
 
   // searching dan filtering dengan menggunakan substring berdasarkan field name atau email
   let users = await usersRepository.getUsers();
