@@ -1,0 +1,22 @@
+meta {
+  name: User
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:5000/api/users?page_number=1&page_size=5&search=email:yang&sort=email:desc
+  body: none
+  auth: none
+}
+
+query {
+  page_number: 1
+  page_size: 5
+  search: email:yang
+  sort: email:desc
+}
+
+headers {
+  Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwidXNlcklkIjoiNjYzNTAxMGYzODZlYjBhM2YyZDYzMmQ1IiwiaWF0IjoxNzE0NzQ5ODI2LCJleHAiOjE3MTQ4MzYyMjZ9.L8mVHdDPGyWXe2j-74x_VTD0r1yLMhkv4lW5fBPMUdo
+}
