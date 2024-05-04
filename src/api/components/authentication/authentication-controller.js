@@ -2,25 +2,27 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServices = require('./authentication-service');
 
 let loginAttempts = {};
-const LOGIN_ATTEMPT_TIME_RESET = 30 * 60 * 1000;
+const LOGIN_ATTEMPT_TIME_RESET = 30 * 60 * 1000; // set waktu 30 menit untuk reset attempt menjadi 0
 /**
  * Handle login request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
- * @returns {object} Response object or pass an error to the next route
+ * @returns {object} - Response object or pass an error to the next route
  */
 async function login(request, response, next) {
   const { email, password } = request.body;
 
   try {
-    const recent = Date.now();
+    const recent = Date.now();  // waktu sekarang
     const lastAttempt = loginAttempts[email];
 
+    
+
     if (lastAttempt && recent - lastAttempt.time < LOGIN_ATTEMPT_TIME_RESET){
-      if (lastAttempt.count >= 5) {
+      if (lastAttempt.count > 5) {
         throw errorResponder(
-          errorTypes.FORBIDDEN,'Too many login attempt. Please try again later'
+          errorTypes.FORBIDDEN,`[${new Date().toISOString()}] User ${email} gagal login. Batas percobaan terlampaui. Attempt= ${attempt}.`
         );
       }
     } else {
@@ -37,15 +39,20 @@ async function login(request, response, next) {
     );
 
     if(!loginSuccess){
-      if (loginAttempts[email].count >=5){
+
+      if (loginAttempts[email].count > 5){
+        attempt = loginAttempts[email].count;
         throw errorResponder(
-          errorTypes.FORBIDDEN,'Too many login attempt, please try again later'
+          errorTypes.FORBIDDEN,`[${new Date().toISOString()}] User ${email} login gagal. telah mencapai limit, coba lagi setelah 30 menit.`
+        );
+        
+      } else {
+        attempt = loginAttempts[email].count;
+        throw errorResponder(
+          errorTypes.INVALID_CREDENTIALS,`[${new Date().toISOString()}] User ${email} login gagal. `
         );
       }
-      throw errorResponder(
-        errorTypes.INVALID_CREDENTIALS,
-        'Wrong email or password'
-      );
+      
     }
     
     delete loginAttempts[email];

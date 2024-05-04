@@ -31,7 +31,7 @@ async function checkLoginCredentials(email, password, logattempt) {
     };
   }
 
-  if (logattempt >= 5){
+  if (logattempt > 5){
     throw new Error('Login attempts reach limit');
   }
 
