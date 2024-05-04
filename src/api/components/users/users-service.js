@@ -13,7 +13,7 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  */
 
 async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrder = 'asc', searchField = '', searchKeyword = '') {
-  // mengembalikan semua data dengan memanggil fungsi getUsers dari users-repository jika pagesize dan pagenumber value nya kosong
+  // mengembalikan semua data/ semua halaman dengan memanggil fungsi getUsers dari users-repository jika pagesize dan pagenumber value nya kosong
   if (!pageNumber || !pageSize){
     return usersRepository.getUsers()
   }
