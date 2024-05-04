@@ -10,13 +10,21 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  */
 async function getUsers(request, response, next) {
   try {
-    const users = await usersService.getUsers();
+
+    // menangkap parameter dari query string request endpoint
+    const page = parseInt(request.query.page_number) || undefined;
+    const pageSize = parseInt(request.query.page_size) || undefined;
+    const search = request.query.search || '';
+    const sort = request.query.sort || '';
+
+    // panggil fungsi getUsers dari file users-service
+    const users = await usersService.getUsers(page, pageSize, search, sort );
+    
     return response.status(200).json(users);
   } catch (error) {
     return next(error);
   }
 }
-
 
 /**
  * Handle get user detail request
