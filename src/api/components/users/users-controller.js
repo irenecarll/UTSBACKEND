@@ -5,26 +5,51 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  * Handle get list of users request
  * @param {object} request - Express request object
  * @param {object} response - Express response object
- * @param {object} next - Express route middlewares
+ * @param {object} next - Express route middleware
  * @returns {object} Response object or pass an error to the next route
  */
+
 async function getUsers(request, response, next) {
   try {
+    // mengekstrak value dari parameter yang didapatkan dari endpoint http
+    const { page_number, page_size, sort, search } = request.query;
 
-    // menangkap parameter dari query string request endpoint
-    const page = parseInt(request.query.page_number) || undefined;
-    const pageSize = parseInt(request.query.page_size) || undefined;
-    const search = request.query.search || '';
-    const sort = request.query.sort || '';
+    // menetapkan nilai default untuk sortBy dan sortOrder dll
+    let sortBy = 'email';
+    let sortOrder = 'asc';
+    let searchField = '';
+    let searchKeyword = '';
 
-    // panggil fungsi getUsers dari file users-service
-    const users = await usersService.getUsers(page, pageSize, search, sort );
-    
+    // memecah parameter dari search yang terdiri dari field dan keyword untuk filter data
+    if (search) {
+      const [field, keyword] = search.split(':');
+      if (['email', 'name'].includes(field)) {
+        searchField = field;
+        searchKeyword = keyword;
+      }
+    }
+
+    // memecah parameter dari sort yang terdiri dari field dan order untuk mengurutkan data
+    if (sort) {
+      const [field, order] = sort.split(':');
+      if (['email', 'name'].includes(field)) {
+        sortBy = field;
+      }
+      if (['asc', 'desc'].includes(order)) {
+        sortOrder = order;
+      }
+    }
+
+    const { page_number: pageNumber, page_size: pageSize } = request.query;
+
+    //panggil getUsers dari user-service
+    const users = await usersService.getUsers(pageNumber, pageSize, sortBy, sortOrder, searchField, searchKeyword);
     return response.status(200).json(users);
   } catch (error) {
     return next(error);
   }
 }
+
 
 /**
  * Handle get user detail request

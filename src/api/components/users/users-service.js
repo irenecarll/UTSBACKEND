@@ -3,79 +3,55 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
 
 /**
  * Get list of users 
- * @param {number} page - Page number
- * @param {number} pageSize - Number of users per page
- * @param {string} search - Search keyword for filtering
- * @param {string} sort - Sorting criteria
- * @returns {Object}
+ * @param {number} pageNumber - Page number 
+ * @param {number} pageSize - Number of users 
+ * @param {string} sortBy - Field name to sorting
+ * @param {string} sortOrder - Sort order 
+ * @param {string} searchField - Field name (email or name) to searching
+ * @param {string} searchKeyword - Keyword for searching
+ * @returns {object} Pagination
  */
-async function getUsers(page, pageSize, search = '', sort = '') {
-  try {
-    // membuat nilai untuk page dan pageSize jika nilainya tidak disediakan 
-    if (!page) page = 1;
-    if (!pageSize) pageSize = 10;
-    
-    //panggil semua data user dari repository
-    let users = await usersRepository.getUsers();
 
-    // Memastikan bahwa users dalam bentuk array
-    if (!Array.isArray(users)) {
-      // Jika users bukan array, konversi ke array
-      users = Array.from(users);
-    }
-  
-    //searching
-    if(search) {
-      users = users.filter(user => user.email.includes(search));
-    }
-  
-    //sorting
-    if(sort) {
-      const [sortBy, sortOrder] = sort.split(':');
-      users = users.sort((a, b) => {
-        if (sortOrder === 'asc') {
-          return a[sortBy].localeCompare(b[sortBy]);
-        } else if (sortOrder === 'desc') {
-          return b[sortBy].localeCompare(a[sortBy]);
-        } else {
-          return 0;
-        }
-      });
-    }
-  
-    // hitung pagination
-    const totalUsers = search ? await usersRepository.countUsers(search) : users.length;
-    const totalPages = Math.ceil(totalUsers / pageSize);
-    const startIndex = (page -1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize - 1, totalUsers - 1);
-    const paginatedUsers = [];
-    for (let i = startIndex; i <= endIndex; i++) {
-      const user = users[i];
-      paginatedUsers.push({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      });
-    }
-  
-    //output
-  
-    const result = {
-      page_number: page,
-      page_size: pageSize,
-      count: paginatedUsers.length,
-      total_pages: totalPages,
-      has_previous_page: page > 1,
-      has_next_page: endIndex < totalUsers - 1,
-      data: paginatedUsers,
-    };
-  
-    return result;
+async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrder = 'asc', searchField = '', searchKeyword = '') {
 
-    } catch (error) {
-      console.error('Error while fetching users', error);
-      throw error;
+  // searching dan filtering dengan menggunakan substring berdasarkan field name atau email
+  let users = await usersRepository.getUsers();
+  if (searchField && searchKeyword) {
+    users = users.filter(user => user[searchField].includes(searchKeyword));
   }
+
+  // sorting untuk mengurutkan data pengguna secara asc ata desc
+  // jika comparison = 1 maka asc, comparison = -1 maka desc 
+  users.sort((a, b) => {
+    const fieldA = a[sortBy];
+    const fieldB = b[sortBy];
+    let comparison = 0;
+    if (fieldA > fieldB) {
+      comparison = 1;
+    } else if (fieldA < fieldB) {
+      comparison = -1;
+    }
+    return sortOrder === 'desc' ? comparison * -1 : comparison;
+  });
+
+  // pagination
+  const totalUsers = users.length;
+  const totalPages = Math.ceil(totalUsers / pageSize);
+  const startIndex = (pageNumber - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalUsers);
+
+  // membuat output response yang akan ditampilkan setelah melakukan pagination
+  const paginatedUsers = users.slice(startIndex, endIndex);
+
+  return {
+    page_number: pageNumber,
+    page_size: pageSize,
+    count: totalUsers,
+    total_pages: totalPages,
+    has_previous_page: pageNumber > 1,
+    has_next_page: endIndex < totalUsers,
+    data: paginatedUsers
+  };
 }
 
 /**

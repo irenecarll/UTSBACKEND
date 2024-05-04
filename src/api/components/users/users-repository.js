@@ -2,80 +2,32 @@ const { User } = require('../../../models');
 
 /**
  * Get a list of users
- * @param {number} page - Page number
- * @param {number} pageSize - Number of users per page
- * @param {string} search - Search keyword for filtering
- * @param {string} sort - Sorting criteria
- * @returns {Promise}
+ * @returns {Promise} Array of users
  */
-
-async function getUsers(page, pageSize, search= '', sort = '') {
+async function getUsers() {
   try {
-    // untuk mencari users
-    let query = User.find();
-
-    // filtering
-    if(search){
-      query = query.where('email').regex(new RegExp(search, 'i'));
-    }
-
-    //sorting
-    if(sort) {
-      const [sortBy, sortOrder] = sort.split(':');
-      query = query.sort({ [sortBy]: sortOrder === 'desc' ? -1 : 1});
-    }
-
-    //hitung total users
-    const totalUsers = await User.countDocuments(query);
-
-    //pagination
-    query = query.skip((page - 1) * pageSize).limit(pageSize);
-
-    //ambil pengguna berdasarkan query yang sudah dibuat
-    const users = await query.exec();
-
-    //hitung jumlah halaman
-    const totalPages = Math.ceil(totalUsers/pageSize);
-
-    //return result
-    const result = {
-      page_number:page,
-      page_size: pageSize,
-      count: users.length,
-      total_pages: totalPages,
-      has_previous_page: page > 1,
-      has_next_page: (page*pageSize) < totalUsers,
-      data: users,
-    };
-
-    return result;
-  } catch (error){
-    throw error;
+    return await User.find({});
+  } catch (error) {
+    // Handle error
+    throw new Error('get users from the database is failed');
   }
-  
 }
 
 /**
- * Count total users based on search criteria
- * @param {string} search - Search keyword for filtering
- * @returns {Promise<number>} - Total count of users
+ * Get user detail by ID
+ * @param {string} id - User ID
+ * @returns {Promise} User object
  */
-async function countUsers(search) {
+async function getUser(id) {
   try {
-    let query = User.find();
-
-    // filtering based on search keyword
-    if (search) {
-      query = query.where('email').regex(new RegExp(search, 'i'));
-    }
-
-    // count total users
-    const totalUsers = await User.countDocuments(query);
-    return totalUsers;
+    return await User.findById(id);
   } catch (error) {
-    throw error;
+    // Handle error
+    throw new Error(`Get user with ID ${id} from the database is failed`);
   }
 }
+
+
 
 /**
  * Get user detail
@@ -152,7 +104,6 @@ async function changePassword(id, password) {
 
 module.exports = {
   getUsers,
-  countUsers,
   getUser,
   createUser,
   updateUser,
