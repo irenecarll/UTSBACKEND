@@ -20,6 +20,10 @@ module.exports = {
         .required()
         .label('Password'),
       password_confirm: joi.string().required().label('Password confirmation'),
+      phone_number: joi.string().label('Phone Number'),
+      total_purchase: joi.number().label('Total Purchase'),
+      city: joi.string().label('City'),
+      payment_status: joi.string().label('Payment Status'),
     },
   },
 
@@ -27,6 +31,10 @@ module.exports = {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
       email: joi.string().email().required().label('Email'),
+      phone_number: joi.string().label('Phone Number'),
+      total_purchase: joi.number().label('Total Purchase'),
+      city: joi.string().label('City'),
+      payment_status: joi.string().label('Payment Status'),
     },
   },
 

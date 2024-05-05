@@ -46,14 +46,19 @@ async function getCustomer(id) {
  * @param {string} name - Name
  * @param {string} email - Email
  * @param {string} password - Password
+ * @param {string} phone_number - Phone Number
+ * @param {number} total_purchase - Total Purchase
+ * @param {string} city - City
+ * @param {string} payment_status - Payment Status
  * @returns {boolean}
  */
-async function createCustomer(name, email, password) {
+
+async function createCustomer(name, email, password, phone_number, total_purchase, city, payment_status) {
   // Hash password
   const hashedPassword = await hashPassword(password);
 
   try {
-    await customersRepository.createCustomer(name, email, hashedPassword);
+    await customersRepository.createCustomer(name, email, hashedPassword, phone_number, total_purchase, city, payment_status);
   } catch (err) {
     return null;
   }

@@ -22,13 +22,21 @@ async function getCustomer(id) {
  * @param {string} name - Name
  * @param {string} email - Email
  * @param {string} password - Hashed password
+ * @param {string} phone_number - Phone Number
+ * @param {number} total_purchase - Total Purchase
+ * @param {string} city - City
+ * @param {string} payment_status - Payment Status
  * @returns {Promise}
  */
-async function createCustomer(name, email, password) {
+async function createCustomer(name, email, password, phone_number, total_purchase, city, payment_status) {
   return Customer.create({
     name,
     email,
     password,
+    phone_number,
+    total_purchase,
+    city,
+    payment_status,
   });
 }
 

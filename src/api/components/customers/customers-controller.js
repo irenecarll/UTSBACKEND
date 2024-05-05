@@ -1,4 +1,5 @@
 const customerService = require('./customers-service');
+const customersValidator = require('./customers-validator');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 /**
@@ -51,6 +52,12 @@ async function createCustomer(request, response, next) {
     const email = request.body.email;
     const password = request.body.password;
     const password_confirm = request.body.password_confirm;
+    const phone_number = request.body.phone_number;
+    const total_purchase = request.body.total_purchase;
+    const city = request.body.city;
+    const payment_status = request.body.payment_status;
+
+
 
     // Check confirmation password
     if (password !== password_confirm) {
@@ -69,7 +76,7 @@ async function createCustomer(request, response, next) {
       );
     }
 
-    const success = await customerService.createCustomer(name, email, password);
+    const success = await customerService.createCustomer(name, email, password, phone_number, total_purchase, city, payment_status);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -77,7 +84,7 @@ async function createCustomer(request, response, next) {
       );
     }
 
-    return response.status(200).json({ name, email });
+    return response.status(200).json({ name, email, phone_number, total_purchase, city, payment_status });
   } catch (error) {
     return next(error);
   }

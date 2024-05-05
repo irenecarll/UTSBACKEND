@@ -17,7 +17,7 @@ module.exports = (app) => {
   route.post(
     '/',
     authenticationMiddleware,
-    celebrate(customersValidator.createCustomer),
+    celebrate({ body: customersValidator.createCustomer.body}),
     customersControllers.createCustomer
   );
 
@@ -28,7 +28,7 @@ module.exports = (app) => {
   route.put(
     '/:id',
     authenticationMiddleware,
-    celebrate(customersValidator.updateCustomer),
+    celebrate({ body: customersValidator.updateCustomer.body}),
     customersControllers.updateCustomer
   );
 
@@ -39,7 +39,8 @@ module.exports = (app) => {
   route.post(
     '/:id/change-password',
     authenticationMiddleware,
-    celebrate(customersValidator.changePassword),
-    customersControllers.changePassword
+    celebrate({body: customersValidator.changeCustomerPassword.body}),
+    customersControllers.changeCustomerPassword
+    
   );
 };
