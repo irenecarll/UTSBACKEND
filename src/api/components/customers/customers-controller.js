@@ -30,7 +30,7 @@ async function getCustomer(request, response, next) {
     const customer = await customerService.getCustomer(request.params.id);
 
     if (!customer) {
-      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown customer');
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Customer tidak ditemukan');
     }
 
     return response.status(200).json(customer);
@@ -56,7 +56,6 @@ async function createCustomer(request, response, next) {
     const total_purchase = request.body.total_purchase;
     const city = request.body.city;
     const payment_status = request.body.payment_status;
-
 
 
     // Check confirmation password
@@ -140,7 +139,7 @@ async function deleteCustomer(request, response, next) {
       );
     }
 
-    return response.status(200).json({ id });
+    return response.status(200).json({ message: 'Customer berhasil dihapus' });
   } catch (error) {
     return next(error);
   }

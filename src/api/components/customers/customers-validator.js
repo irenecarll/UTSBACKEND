@@ -34,7 +34,7 @@ module.exports = {
       phone_number: joi.string().label('Phone Number'),
       total_purchase: joi.number().label('Total Purchase'),
       city: joi.string().label('City'),
-      payment_status: joi.string().label('Payment Status'),
+      payment_status: joi.string().valid('paid', 'unpaid', 'none').label('Payment Status'),
     },
   },
 
