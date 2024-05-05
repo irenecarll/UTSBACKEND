@@ -29,16 +29,6 @@ async function getUser(id) {
 }
 
 
-
-/**
- * Get user detail
- * @param {string} id - User ID
- * @returns {Promise}
- */
-async function getUser(id) {
-  return User.findById(id);
-}
-
 /**
  * Create new user
  * @param {string} name - Name
