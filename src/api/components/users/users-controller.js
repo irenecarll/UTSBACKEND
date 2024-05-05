@@ -12,20 +12,20 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 async function getUsers(request, response, next) {
   try {
     // mengekstrak value dari parameter yang didapatkan dari endpoint http
-    const { page_number, page_size, sort, search } = request.query;
+    const {sort, search } = request.query;
 
     // menetapkan nilai default untuk sortBy dan sortOrder dll
     let sortBy = 'email';
     let sortOrder = 'asc';
     let searchField = '';
-    let searchKeyword = '';
+    let searchKey = '';
 
     // memecah parameter dari search yang terdiri dari field dan keyword untuk filter data
     if (search) {
       const [field, keyword] = search.split(':');
       if (['email', 'name'].includes(field)) {
         searchField = field;
-        searchKeyword = keyword;
+        searchKey = keyword;
       }
     }
 
@@ -40,10 +40,10 @@ async function getUsers(request, response, next) {
       }
     }
 
-    const { page_number: pageNumber, page_size: pageSize } = request.query;
+    const { page_numb: pageNumber, page_size: pageSize } = request.query;
 
     //panggil getUsers dari user-service
-    const users = await usersService.getUsers(pageNumber, pageSize, sortBy, sortOrder, searchField, searchKeyword);
+    const users = await usersService.getUsers(pageNumber, pageSize, sortBy, sortOrder, searchField, searchKey);
     return response.status(200).json(users);
   } catch (error) {
     return next(error);

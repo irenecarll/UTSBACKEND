@@ -8,11 +8,11 @@ const { hashPassword, passwordMatched } = require('../../../utils/password');
  * @param {string} sortBy - Field name to sorting
  * @param {string} sortOrder - Sort order 
  * @param {string} searchField - Field name (email or name) to searching
- * @param {string} searchKeyword - Keyword for searching
+ * @param {string} searchKey - Keyword for searching
  * @returns {object} Pagination
  */
 
-async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrder = 'asc', searchField = '', searchKeyword = '') {
+async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrder = 'asc', searchField = '', searchKey = '') {
   // mengembalikan semua data/ semua halaman dengan memanggil fungsi getUsers dari users-repository jika pagesize dan pagenumber value nya kosong
   if (!pageNumber || !pageSize){
     return usersRepository.getUsers()
@@ -20,19 +20,19 @@ async function getUsers(pageNumber = 1, pageSize = 10, sortBy = 'email', sortOrd
 
   // searching dan filtering dengan menggunakan substring berdasarkan field name atau email
   let users = await usersRepository.getUsers();
-  if (searchField && searchKeyword) {
-    users = users.filter(user => user[searchField].includes(searchKeyword));
+  if (searchField && searchKey) {
+    users = users.filter(user => user[searchField].includes(searchKey));
   }
 
-  // sorting untuk mengurutkan data pengguna secara asc ata desc
+  // sorting untuk mengurutkan data pengguna secara asc atau desc
   // jika comparison = 1 maka asc, comparison = -1 maka desc 
   users.sort((a, b) => {
-    const fieldA = a[sortBy];
-    const fieldB = b[sortBy];
+    const field1 = a[sortBy];
+    const field2 = b[sortBy];
     let comparison = 0;
-    if (fieldA > fieldB) {
+    if (field1 > field2) {
       comparison = 1;
-    } else if (fieldA < fieldB) {
+    } else if (field1 < field2) {
       comparison = -1;
     }
     return sortOrder === 'desc' ? comparison * -1 : comparison;

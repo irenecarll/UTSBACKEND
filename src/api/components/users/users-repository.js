@@ -2,12 +2,13 @@ const { User } = require('../../../models');
 
 /**
  * Get a list of users
- * @returns {Promise} Array of users
+ * @returns {Promise} 
  */
+
 async function getUsers() {
   try {
     return await User.find({}, { password: 0}); // password : 0 artinya properti password tidak akan ditampilkan atau nilainya false
-    return users;
+    
   } catch (error) {
     // Handle error
     throw new Error('get users from the database is failed');

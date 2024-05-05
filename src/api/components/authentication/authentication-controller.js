@@ -2,7 +2,8 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 const authenticationServices = require('./authentication-service');
 
 let loginAttempts = {};
-const LOGIN_ATTEMPT_TIME_RESET = 30 * 60 * 1000; // set wakt 30 menit untuk reset attempt jadi 0
+const LOGIN_TIME_RESET = 30 * 60 * 1000; // set wakt 30 menit untuk reset attempt jadi 0
+
 /**
  * Handle login request
  * @param {object} request - Express request object
@@ -10,16 +11,16 @@ const LOGIN_ATTEMPT_TIME_RESET = 30 * 60 * 1000; // set wakt 30 menit untuk rese
  * @param {object} next - Express route middlewares
  * @returns {object} - Response object or pass an error to the next route
  */
+
 async function login(request, response, next) {
   const { email, password } = request.body;
-
   try {
     const recent = Date.now(); // waktu sekarang yg akan di tampilkan dalam output api
     const lastAttempt = loginAttempts[email];
 
     let attempt;
 
-    if (lastAttempt && recent - lastAttempt.time < LOGIN_ATTEMPT_TIME_RESET){
+    if (lastAttempt && recent - lastAttempt.time < LOGIN_TIME_RESET){
       if (lastAttempt.count > 5) {
         throw errorResponder(
           errorTypes.FORBIDDEN,`[${new Date().toISOString()}] User ${email} gagal login. Batas percobaan terlampaui. Attempt= ${attempt}.`
