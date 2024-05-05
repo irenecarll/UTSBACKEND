@@ -15,6 +15,10 @@ async function getCustomers() {
       id: customer.id,
       name: customer.name,
       email: customer.email,
+      phone_number: customer.phone_number,
+      city: customer.city,
+      total_purchase: customer.total_purchase,
+      payment_status: customer.payment_status,
     });
   }
 
@@ -38,6 +42,10 @@ async function getCustomer(id) {
     id: customer.id,
     name: customer.name,
     email: customer.email,
+    phone_number: customer.phone_number,
+    city: customer.city,
+    total_purchase: customer.total_purchase,
+    payment_status: customer.payment_status,
   };
 }
 
