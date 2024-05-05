@@ -3,7 +3,6 @@ const config = require('../core/config');
 const logger = require('../core/logger')('app');
 
 const customersSchema = require('./customers-schema');
-
 const usersSchema = require('./users-schema');
 
 mongoose.connect(`${config.database.connection}/${config.database.name}`, {
@@ -16,23 +15,11 @@ db.once('open', () => {
 });
 
 const User = mongoose.model('users', mongoose.Schema(usersSchema));
-
 const Customer = mongoose.model('customers', mongoose.Schema(customersSchema));
-
-const Product = mongoose.model('products', mongoose.Schema(customersSchema));
-
-const Purchase = mongoose.model('custpurchase', mongoose.Schema(customersSchema));
-
-
-
-
-
 
 
 module.exports = {
   mongoose,
-  Customer,
-  Product,
-  Purchase,
   User,
+  Customer,
 };

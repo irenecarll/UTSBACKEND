@@ -1,4 +1,4 @@
-const customerService = require('./customer-service');
+const customerService = require('./customers-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
 /**

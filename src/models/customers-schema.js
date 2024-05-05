@@ -2,10 +2,11 @@ const customersSchema = {
   name: String,
   email: String,
   password: String,
-  gender: String,
-  address: String,
-  totalpurchase: String,
-  paymentstatus: String,
+  phone_number: Number,
+  city: String,
+  total_purchase: Number,
+  payment_status: String,
+  
 };
 
 module.exports = customersSchema;
