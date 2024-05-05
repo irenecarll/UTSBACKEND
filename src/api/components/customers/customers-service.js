@@ -81,7 +81,7 @@ async function createCustomer(name, email, password, phone_number, total_purchas
  * @param {string} email - Email
  * @returns {boolean}
  */
-async function updateCustomer(id, name, email) {
+async function updateCustomer(id, name, email, phone_number, city, total_purchase, payment_status) {
   const customer = await customersRepository.getCustomer(id);
 
   // Customer not found
@@ -90,7 +90,7 @@ async function updateCustomer(id, name, email) {
   }
 
   try {
-    await customersRepository.updateCustomer(id, name, email);
+    await customersRepository.updateCustomer(id, name, email, phone_number, city, total_purchase, payment_status);
   } catch (err) {
     return null;
   }

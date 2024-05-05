@@ -47,7 +47,7 @@ async function createCustomer(name, email, password, phone_number, total_purchas
  * @param {string} email - Email
  * @returns {Promise}
  */
-async function updateCustomer(id, name, email) {
+async function updateCustomer(id, name, email, phone_number, city, total_purchase, payment_status) {
   return Customer.updateOne(
     {
       _id: id,
@@ -56,6 +56,10 @@ async function updateCustomer(id, name, email) {
       $set: {
         name,
         email,
+        phone_number,
+        total_purchase,
+        city,
+        payment_status,
       },
     }
   );

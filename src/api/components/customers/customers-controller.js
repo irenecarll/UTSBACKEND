@@ -102,17 +102,12 @@ async function updateCustomer(request, response, next) {
     const id = request.params.id;
     const name = request.body.name;
     const email = request.body.email;
+    const phone_number = request.body.phone_number;
+    const total_purchase = request.body.total_purchase;
+    const city = request.body.city;
+    const payment_status = request.body.payment_status;
 
-    // Email must be unique
-    const emailIsRegistered = await customerService.emailIsRegistered(email);
-    if (emailIsRegistered) {
-      throw errorResponder(
-        errorTypes.EMAIL_ALREADY_TAKEN,
-        'Email is already registered'
-      );
-    }
-
-    const success = await customerService.updateCustomer(id, name, email);
+    const success = await customerService.updateCustomer(id, name, email, phone_number, city, total_purchase, payment_status);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -120,7 +115,7 @@ async function updateCustomer(request, response, next) {
       );
     }
 
-    return response.status(200).json({ id });
+    return response.status(200).json({ message: 'Update berhasil' });
   } catch (error) {
     return next(error);
   }
